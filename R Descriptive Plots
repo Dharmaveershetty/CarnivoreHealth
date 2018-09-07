@@ -1,18 +1,65 @@
 # CREATING SIMPLE CATEGORICAL BOX PLOTS
 # import the datafile
+# install packages
 install.packages ("ggplot2")
+# Load required library
 library(ggplot2)
-ggplot(CP1Datafilename, aes(x=as.factor(HOST))) + geom_bar() + coord_flip() + theme (legend.position = "none") + labs (x="Host", y="Number of samples with CP1")
-ggplot(CP1, aes(x=as.factor(SPECIES))) + geom_bar() + theme (legend.position = "none") + labs (x="Parvovirus species", y="Number of samples with Parvovirus")
-ggplot(CP1, aes(x=as.factor(LOCATION))) + geom_bar() + coord_flip() + theme (legend.position = "none") + labs (x="Location (State)", y="Number of samples with Parvovirus")
-ggplot(CP1, aes(x=as.factor(VARIANT))) + geom_bar() + coord_flip() + theme (legend.position = "none") + labs (x="Parvovirus species variant", y="Number of samples with Parvovirus")
+# Plot graphs
+ggplot(CP1_Data, aes(x=as.factor(HOST))) + geom_bar() + coord_flip() + geom_label (stat='count', aes(label=..count..)) + theme (legend.position = "none") + labs (x="Host", y="Number of samples with CP1")ggplot(CP1_Data, aes(x=as.factor(SPECIES))) + geom_bar() + theme (legend.position = "none") + labs (x="Parvovirus species", y="Number of samples with Parvovirus")
+ggplot(CP1_Data, aes(x=as.factor(LOCATION))) + geom_bar() + coord_flip() + geom_label (stat='count', aes(label=..count..)) + theme (legend.position = "none") + labs (x="Location (State)", y="Number of samples with Parvovirus")
+ggplot(CP1_Data, aes(x=as.factor(VARIANT))) + geom_bar() + coord_flip() + geom_label (stat='count', aes(label=..count..)) + theme (legend.position = "none") + labs (x="Parvovirus species variant", y="Number of samples with Parvovirus")
+ggplot(CP1_Data, aes(x=as.factor(SPECIES))) + geom_bar() + geom_label (stat='count', aes(label=..count..)) + theme (legend.position = "none") + labs (x="Parvovirus species variant", y="Number of samples with Parvovirus")
 
-# CREATING GROUPED CATEGORICAL BOX PLOTS
-
+# CREATING GROUPED CATEGORICAL BOX PLOTS (HOST AND VIRUS SPECIES)
+# import the datafile
+# install packages
+install.packages ("ggplot2")
 install.packages ("ggpubr")
 install.packages ("dplyr")
+# Load required libraries
 library(dplyr)
-
+library(ggplot2)
 library(ggpubr)
 # Creates a publication ready theme from dplyr package
 theme_set(theme_pubclean())
+# Filter and count the number of records by group
+df <- CP1_Data %>%
+      filter(SPECIES %in% c("CPV", "FPV")) %>%
+      group_by(HOST, SPECIES) %>%
+      summarise(counts = n()) 
+head(df, 10)
+# Create the grouped bar plots
+ggplot(df, aes(x = HOST, y = counts)) +
+    geom_bar(
+        aes(color = SPECIES, fill = SPECIES),
+        stat = "identity", position = position_dodge(0.8),
+        width = 0.7) + coord_flip() + 
+    scale_color_manual(values = c("#0073C2FF", "#EFC000FF"))+
+    scale_fill_manual(values = c("#0073C2FF", "#EFC000FF"))
+    
+# CREATING GROUPED CATEGORICAL BOX PLOTS (LOCATION AND CP1 SPECIES)
+# import the datafile
+# install packages
+install.packages ("ggplot2")
+install.packages ("ggpubr")
+install.packages ("dplyr")
+# Load required libraries
+library(dplyr)
+library(ggplot2)
+library(ggpubr)
+# Creates a publication ready theme from dplyr package
+theme_set(theme_pubclean())
+# Filter and count the number of records by group
+df <- CP1_Data %>%
+      filter(SPECIES %in% c("CPV", "FPV")) %>%
+      group_by(LOCATION, SPECIES) %>%
+      summarise(counts = n()) 
+head(df, 10)
+# Create the grouped bar plots
+ggplot(df, aes(x = LOCATION, y = counts)) +
+    geom_bar(
+        aes(color = SPECIES, fill = SPECIES),
+        stat = "identity", position = position_dodge(0.8),
+        width = 0.7) + coord_flip()+ 
+    scale_color_manual(values = c("#0073C2FF", "#EFC000FF"))+
+    scale_fill_manual(values = c("#0073C2FF", "#EFC000FF"))
