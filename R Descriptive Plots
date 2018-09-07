@@ -1,0 +1,18 @@
+# CREATING SIMPLE CATEGORICAL BOX PLOTS
+# import the datafile
+install.packages ("ggplot2")
+library(ggplot2)
+ggplot(CP1Datafilename, aes(x=as.factor(HOST))) + geom_bar() + coord_flip() + theme (legend.position = "none") + labs (x="Host", y="Number of samples with CP1")
+ggplot(CP1, aes(x=as.factor(SPECIES))) + geom_bar() + theme (legend.position = "none") + labs (x="Parvovirus species", y="Number of samples with Parvovirus")
+ggplot(CP1, aes(x=as.factor(LOCATION))) + geom_bar() + coord_flip() + theme (legend.position = "none") + labs (x="Location (State)", y="Number of samples with Parvovirus")
+ggplot(CP1, aes(x=as.factor(VARIANT))) + geom_bar() + coord_flip() + theme (legend.position = "none") + labs (x="Parvovirus species variant", y="Number of samples with Parvovirus")
+
+# CREATING GROUPED CATEGORICAL BOX PLOTS
+
+install.packages ("ggpubr")
+install.packages ("dplyr")
+library(dplyr)
+
+library(ggpubr)
+# Creates a publication ready theme from dplyr package
+theme_set(theme_pubclean())
